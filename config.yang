@@ -1,0 +1,52 @@
+module config {
+  namespace "http://tail-f.com/ns/example/config";
+  prefix config;
+  yang-version 1.1;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  container interface {
+    list GigabitEthernet {
+      key "name";
+
+      leaf name {
+        type string;
+      }
+
+      leaf shutdown {
+        tailf:info "Shutdown the selected interface";
+        type empty;
+      }
+
+      container stats {
+        config false;
+        tailf:callpoint "stats";
+        leaf sent {
+          type uint32;
+        }
+
+        leaf received {
+          type uint32;
+        }
+      }
+
+      action clear {
+        tailf:actionpoint "clear";
+        output {
+          leaf received {
+            type uint32;
+          }
+          leaf sent {
+            type uint32;
+          }
+        }
+      }
+    }
+  }
+}
